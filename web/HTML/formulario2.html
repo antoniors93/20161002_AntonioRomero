@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>formulario2</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <Link rel="stylesheet" href="../CSS/cssFormulario.css"/>
+    </head>
+    <body>
+        <div id="contenedor">
+            <h2>Formulario</h2>
+                <form action="../Formulario2" method="post">
+                    <fieldset id="datosPers">
+                        <legend>Datos personales</legend>
+                         <br/>
+                         
+                        <div id="usuario">
+                        <label>Usuario</label>
+                        <input type="text" name="Usuario"/>
+                        </div> <br/>
+                        
+                        <div id="password">
+                        <label>Password</label>
+                        <input type="password" name="Password"/>
+                        </div> <br/>
+                        
+                        <div id="edad">
+                        <label>Edad</label>
+                        <select name="Edad">
+                            <option>18</option>
+                            <option>19</option>
+                            <option>20</option>
+                            <option>21</option>
+                            <option>22</option>
+                            <option>23</option>
+                            <option>24</option>
+                            <option>25</option>
+                        </select>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset id="otrosDatos">
+                        <legend>Otros datos</legend>
+                         <br/>
+                         
+                        <div id="estadoCivil">
+                        <label>Estado civil</label>
+                        <input type="radio" name="EstadoCivil" value="Soltero" checked>Soltero/a 
+                        <input type="radio" name="EstadoCivil" value="Casado">Casado/a
+                        <input type="radio" name="EstadoCivil" value="Viudo">Viudo/a
+                        <input type="radio" name="EstadoCivil" value="Divorciado">Divorciado/a
+                        </div> <br/>
+                        
+                        <div id="aficiones">
+                        <label>Aficiones(uno o varios,CTRL)</label> </br>
+                        <select name="Aficiones" size="6" multiple>
+                            <option value="Deporte">Deporte</option>
+                            <option value="Musica">Musica</option>
+                            <option value="Informatica">Informatica</option>
+                            <option value="Viajes">Viajes</option>
+                            <option value="Tiendas">Tiendas</option>
+                            <option value="Juegos">Juegos</option>
+                        </select>
+                        </div> <br/>
+                        
+                        <div id="comentarios">
+                        <label>Comentarios</label> </br>
+                        <textarea name="Comentarios" rows="2" cols="40">Escribe aqui tus comentarios</textarea>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset id="mediosTecnol">
+                        <legend>Medios tecnologicos</legend>
+                         <br/>
+                         
+                        <div id="internet">
+                        <label>Dispones de internet</label>
+                        <input type="radio" name="Internet" value="Si" checked>Si 
+                        <input type="radio" name="Internet" value="No">No
+                        </div> <br/>
+                        
+                        <div id="sistOperativo">
+                        <label>Sistema operativo(elige uno)</label> </br>
+                        <select name="SistOperativo" size="4">
+                            <option value="Linux">Linux</option>
+                            <option value="Windows">Windows</option>
+                            <option value="Macintosh">Macintosh</option>
+                            <option value="Solaris">Solaris</option>
+                        </select>
+                        </div>
+                    </fieldset>
+
+                    <div id="botones">
+                        <input type="reset" name="Limpiar" value="Limpiar">
+                        <input type="submit" name="Enviar" value="Enviar" />
+                    </div>    
+                </form>
+        </div>
+    </body>
+</html>
