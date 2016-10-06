@@ -1,13 +1,4 @@
-# Created by https://www.gitignore.io/api/netbeans,java
-
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-
-nbdist/
-.nb-gradle/
-
+# Created by https://www.gitignore.io/api/java
 
 ### Java ###
 *.class
@@ -17,8 +8,8 @@ nbdist/
 
 # Package Files #
 *.jar
-
 *.ear
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/build/
