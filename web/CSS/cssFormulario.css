@@ -19,6 +19,24 @@ and open the template in the editor.
     float:left;
 }
 
+#datosAcces{
+    background-color:#F8FFCC;
+    width:70%;
+    float:left;
+}
+
+#infoGeneral{
+    background-color:#F8FFCC;
+    width:70%;
+    float:left;
+}
+
+#preferencias{
+    background-color:#F8FFCC;
+    width:70%;
+    float:left;
+}
+
 #otrosDatos{
     background-color:#F8FFCC;
     width:70%;

@@ -38,7 +38,7 @@ public class CicloVida extends HttpServlet {
             out.println("<title>Servlet SaludoAnotacion</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Par&aacute;metros iniciales</h1>");
+            out.println("<h1>Ciclo de vida</h1>");
             out.println("</br> <a href='index.html' > Enlace a index </a>");
             out.println("</body>");
             out.println("</html>");

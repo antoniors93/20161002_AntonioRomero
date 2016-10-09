@@ -16,20 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author antonio
+ * @author Antonio
  */
-@WebServlet(name = "CabecerasPeticion", urlPatterns = {"/CabecerasPeticion"})
-public class CabecerasPeticion extends HttpServlet {    
+@WebServlet(name = "ParametrosIniciales", urlPatterns = {"/ParametrosIniciales"})
+public class ParametrosIniciales extends HttpServlet {
 
     /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
      *
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
      */
-    @Override 
-    protected void service(HttpServletRequest request, HttpServletResponse response)
+   protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             out.println("<!DOCTYPE html>");
@@ -38,12 +39,12 @@ public class CabecerasPeticion extends HttpServlet {
             out.println("<title>Servlet SaludoAnotacion</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Cabeceras de peticion</h1>");
-            
-            Enumeration<String>parametros2=request.getHeaderNames();
-              while(parametros2.hasMoreElements()){
-                String elemento=parametros2.nextElement();
-                String valor=request.getHeader(elemento);
+            out.println("<h1>Par&aacute;metros iniciales</h1>");
+
+            Enumeration<String>parametros=request.getParameterNames();
+            while(parametros.hasMoreElements()){
+                String elemento=parametros.nextElement();
+                String valor=request.getParameter(elemento);
                 out.println(elemento+" - "+valor);
             }
               
@@ -51,5 +52,5 @@ public class CabecerasPeticion extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
     }
-    
+
 }

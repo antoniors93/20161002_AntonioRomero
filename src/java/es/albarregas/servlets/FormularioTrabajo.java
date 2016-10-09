@@ -7,6 +7,7 @@ package es.albarregas.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,35 +34,77 @@ public class FormularioTrabajo extends HttpServlet {
     boolean controlarUsuario;
     boolean controlarPass;
     boolean controlarFecha;
+    Enumeration<String>parametros;
     
+    //metodo en el que mostramos los datos
+    private void mostrarDatosCorrectos(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        
+        int fecha=1;
+        int pref=1;
+        parametros=request.getParameterNames();
+        
+        //recorremos todos los parametros para ir mostrando
+        while(parametros.hasMoreElements()){
+            String nombre=parametros.nextElement();
+            String valor=request.getParameter(nombre);
+            
+            //se hace una excepcion para mostrar la fecha y se comprueba que el valor de enviar no aparezca
+            if(!nombre.equalsIgnoreCase("Enviar")&&!valor.equalsIgnoreCase("")){
+                if(nombre.equalsIgnoreCase("Dia")||nombre.equalsIgnoreCase("Mes")||nombre.equalsIgnoreCase("Ano")){
+                    if(fecha==1)
+                        out.println("Fecha de nacimiento: "+request.getParameter("Dia")+"/"+request.getParameter("Mes")+"/"+request.getParameter("Ano")+"</br>");
+                fecha++;
+                }else{
+                    if(nombre.startsWith("Prefe")){
+                        if(pref==1){
+                        out.println("Preferencias:</br>");
+                        pref++;
+                        }
+                        out.println("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+valor+"</br>");
+                    }else{
+                        out.println(nombre+": "+valor+"</br>");
+                    }    
+                }
+            }
+        }
+    }
+    
+    //metodo que llamamos para que controle los errores del formulario
     private void controlarErrores(HttpServletRequest request){
 
         int aa=Integer.parseInt(request.getParameter("Ano"));
         int mm=Integer.parseInt(request.getParameter("Mes"));
         int dd=Integer.parseInt(request.getParameter("Dia"));
         
-        if ("".equals(request.getParameter("Nombre"))||request.getParameter("Nombre")==null) {
-            controlarNombre=false;
-        } else {
+        //comprobamos que estos campos no esten vacios
+        if (!"".equals(request.getParameter("Nombre"))){
             controlarNombre=true;
-        }
-        if ("".equals(request.getParameter("Usuario"))||request.getParameter("Usuario")==null) {
-            controlarUsuario=false;
-        } else {
-            controlarUsuario=true;
-        }
-        if ("".equals(request.getParameter("Password"))||request.getParameter("Password")==null) {
-            controlarPass=false;
-        } else {
-            controlarPass=true;
+        }else{
+            controlarNombre=false;
         }
         
+        if (!"".equals(request.getParameter("Usuario"))){
+            controlarUsuario=true;
+        }else{
+            controlarUsuario=false;
+        }
+        
+        if (!"".equals(request.getParameter("Password"))){
+            controlarPass=true;
+        }else{
+            controlarPass=false;
+        }
+        
+        //comprobamos que la fecha marcada existe
         if (mm == 4 || mm == 6 || mm == 9 || mm == 11) {
             if (dd == 31) {
                 controlarFecha = false;
             }
         }else{
             if (mm == 2) {
+                //formula de años bisiestos
                 if ((aa % 4 == 0) && (aa % 100 != 0) || (aa % 400 == 0)) {
                     if (dd <= 29) 
                     controlarFecha = true;
@@ -79,7 +122,39 @@ public class FormularioTrabajo extends HttpServlet {
         }
     }
     
-    
+    //metodo que nos muestra el mensaje de que hay datos erroneos y crea el formulario oculto
+    private void mostrarMensajeError(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet FormularioTrabajo</title>");
+            out.println("<Link rel=\"stylesheet\" href=\"CSS/cssFormulario.css\"/>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h2>Formulario</h2>");
+                
+                out.println("<h3>Existen datos erroneos</h3>");
+                out.println("<form method=\"post\" action=\"FormularioTrabajo\">");
+                parametros=request.getParameterNames();
+                //recorremos todos los parametros para crear el formulario oculto
+                while(parametros.hasMoreElements()){
+                String nombre=parametros.nextElement();
+                String valor=request.getParameter(nombre);
+                out.println("<input type=\"hidden\" name="+nombre+" value="+valor+">");
+                }
+                out.println("<input type=\"submit\" name=\"Volver\" value=\"Volver\" formaction=\"FormularioTrabajo\"/>");                            
+                out.println("</form>");         
+
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+            
+            
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -88,15 +163,20 @@ public class FormularioTrabajo extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FormularioTrabajo</title>");            
+            out.println("<title>Servlet FormularioTrabajo</title>");
+            out.println("<Link rel=\"stylesheet\" href=\"CSS/cssFormulario.css\"/>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Controlador de errores</h1>");
             controlarErrores(request);
-            if(controlarNombre&&controlarUsuario&&controlarPass&&controlarFecha){
-                out.println("<p>Datos introducidos correctamente</p>");
+            if(controlarNombre&&controlarUsuario&&controlarPass&&controlarFecha){//si no hay ningun error
+                out.println("<h2>Datos introducidos correctamente:</h2></br></br>");
+                mostrarDatosCorrectos(request,response);
                 out.println("</br> <a href='index.html' > Enlace a index </a>");
             }else{
+                if(request.getParameter("Volver")==null){//si hay error y se ha pulsado volver a atras
+                    mostrarMensajeError(request,response);
+                }else{
+                //se muestran los errores
                 if(!controlarNombre)
                 out.println("<p>Nombre incorrecto</p>");
                 if(!controlarUsuario)
@@ -106,7 +186,8 @@ public class FormularioTrabajo extends HttpServlet {
                 if(!controlarFecha)
                 out.println("<p>Fecha incorrecta</p>");
                 
-                
+                //mostramos el formulario con los datos cargados
+                out.println("</br><h2>Formulario</h2>");
                  out.println("<form method=\"post\" action=\"FormularioTrabajo\">");
                     out.println("<fieldset id=\"datosPers\">");
                         out.println("<legend>Datos personales</legend>");
@@ -137,125 +218,20 @@ public class FormularioTrabajo extends HttpServlet {
                                 out.println("<label >Fecha de nacimiento:</label>");
                                 out.println("<select name=\"Dia\">");
                                     out.println("<option selected>" +request.getParameter("Dia")+ "</option>");
-                                    out.println("<option>1</option>");
-                                    out.println("<option>2</option>");
-                                    out.println("<option>3</option>");
-                                    out.println("<option>4</option>");
-                                    out.println("<option>5</option>");
-                                    out.println("<option>6</option>");
-                                    out.println("<option>7</option>");
-                                    out.println("<option>8</option>");
-                                    out.println("<option>9</option>");
-                                    out.println("<option>10</option>");
-                                    out.println("<option>11</option>");
-                                    out.println("<option>12</option>");
-                                    out.println("<option>13</option>");
-                                    out.println("<option>14</option>");
-                                    out.println("<option>15</option>");
-                                    out.println("<option>16</option>");
-                                    out.println("<option>17</option>");
-                                    out.println("<option>18</option>");
-                                    out.println("<option>19</option>");
-                                    out.println("<option>20</option>");
-                                    out.println("<option>21</option>");
-                                    out.println("<option>22</option>");
-                                    out.println("<option>23</option>");
-                                    out.println("<option>24</option>");
-                                    out.println("<option>25</option>");
-                                    out.println("<option>26</option>");
-                                    out.println("<option>27</option>");
-                                    out.println("<option>28</option>");
-                                    out.println("<option>29</option>");
-                                    out.println("<option>30</option>");
-                                    out.println("<option>31</option>");
+                                    for(int i=1;i<=31;i++)
+                                    out.println("<option>"+i+"</option>");    
                                 out.println("</select>");
                 
                                 out.println("<select name=\"Mes\">");
                                     out.println("<option selected>" +request.getParameter("Mes")+ "</option>");
-                                    out.println("<option>1</option>");
-                                    out.println("<option>2</option>");
-                                    out.println("<option>3</option>");
-                                    out.println("<option>4</option>");
-                                    out.println("<option>5</option>");
-                                    out.println("<option>6</option>");
-                                    out.println("<option>7</option>");
-                                    out.println("<option>8</option>");
-                                    out.println("<option>9</option>");
-                                    out.println("<option>10</option>");
-                                    out.println("<option>11</option>");
-                                    out.println("<option>12</option>");
+                                    for(int i=1;i<=12;i++)
+                                    out.println("<option>"+i+"</option>");
                                 out.println("</select>");
                                 
                                 out.println("<select name=\"Ano\">");
                                     out.println("<option selected>" +request.getParameter("Ano")+ "</option>");
-                                    out.println("<option>1950</option>");
-                                    out.println("<option>1951</option>");
-                                    out.println("<option>1952</option>");
-                                    out.println("<option>1953</option>");
-                                    out.println("<option>1954</option>");
-                                    out.println("<option>1955</option>");
-                                    out.println("<option>1956</option>");
-                                    out.println("<option>1956</option>");
-                                    out.println("<option>1957</option>");
-                                    out.println("<option>1958</option>");
-                                    out.println("<option>1959</option>");
-                                    out.println("<option>1960</option>");
-                                    out.println("<option>1961</option>");
-                                    out.println("<option>1962</option>");
-                                    out.println("<option>1963</option>");
-                                    out.println("<option>1964</option>");
-                                    out.println("<option>1965</option>");
-                                    out.println("<option>1966</option>");
-                                    out.println("<option>1967</option>");
-                                    out.println("<option>1968</option>");
-                                    out.println("<option>1969</option>");
-                                    out.println("<option>1970</option>");
-                                    out.println("<option>1971</option>");
-                                    out.println("<option>1972</option>");
-                                    out.println("<option>1973</option>");
-                                    out.println("<option>1974</option>");
-                                    out.println("<option>1975</option>");
-                                    out.println("<option>1976</option>");
-                                    out.println("<option>1977</option>");
-                                    out.println("<option>1978</option>");
-                                    out.println("<option>1979</option>");
-                                    out.println("<option>1980</option>");
-                                    out.println("<option>1981</option>");
-                                    out.println("<option>1982</option>");
-                                    out.println("<option>1983</option>");
-                                    out.println("<option>1984</option>");
-                                    out.println("<option>1985</option>");
-                                    out.println("<option>1986</option>");
-                                    out.println("<option>1987</option>");
-                                    out.println("<option>1988</option>");
-                                    out.println("<option>1989</option>");
-                                    out.println("<option>1990</option>");
-                                    out.println("<option>1991</option>");
-                                    out.println("<option>1992</option>");
-                                    out.println("<option>1993</option>");
-                                    out.println("<option>1994</option>");
-                                    out.println("<option>1995</option>");
-                                    out.println("<option>1996</option>");
-                                    out.println("<option>1997</option>");
-                                    out.println("<option>1998</option>");
-                                    out.println("<option>1999</option>");
-                                    out.println("<option>2000</option>");
-                                    out.println("<option>2001</option>");
-                                    out.println("<option>2002</option>");
-                                    out.println("<option>2003</option>");
-                                    out.println("<option>2004</option>");
-                                    out.println("<option>2005</option>");
-                                    out.println("<option>2006</option>");
-                                    out.println("<option>2007</option>");
-                                    out.println("<option>2008</option>");
-                                    out.println("<option>2009</option>");
-                                    out.println("<option>2010</option>");
-                                    out.println("<option>2011</option>");
-                                    out.println("<option>2012</option>");
-                                    out.println("<option>2013</option>");
-                                    out.println("<option>2014</option>");
-                                    out.println("<option>2015</option>");
-                                    out.println("<option>2016</option>");
+                                    for(int i=1950;i<=2016;i++)
+                                    out.println("<option>"+i+"</option>");
                                 out.println("</select>");
                             
                             out.println("</div></br>");
@@ -284,34 +260,40 @@ public class FormularioTrabajo extends HttpServlet {
                         out.println("<div id=\"preferencias\">");
                             out.println("<label>Preferencias:</label></br>");
                             
-                            if(request.getParameter("Deporte")!=null)
-                                out.println("<input type=\"checkbox\" name=\"Deporte\" value=\"Deporte\" checked> Deporte <br>");
+                            if(request.getParameter("Prefe1")!=null)
+                                out.println("<input type=\"checkbox\" name=\"Prefe1\" value=\"Deporte\" checked> Deporte <br>");
                             else
-                                out.println("<input type=\"checkbox\" name=\"Deporte\" value=\"Deporte\"> Deporte<br>");
+                                out.println("<input type=\"checkbox\" name=\"Prefe1\" value=\"Deporte\"> Deporte<br>");
                             
-                            if(request.getParameter("Lectura")!=null)
-                                out.println("<input type=\"checkbox\" name=\"Lectura\" value=\"Lectura\" checked> Lectura <br>");
+                            if(request.getParameter("Prefe2")!=null)
+                                out.println("<input type=\"checkbox\" name=\"Prefe2\" value=\"Lectura\" checked> Lectura <br>");
                             else
-                                out.println("<input type=\"checkbox\" name=\"Lectura\" value=\"Lectura\"> Lectura <br>");
+                                out.println("<input type=\"checkbox\" name=\"Prefe2\" value=\"Lectura\"> Lectura <br>");
                             
-                            if(request.getParameter("Cine")!=null)
-                                out.println("<input type=\"checkbox\" name=\"Cine\" value=\"Cine\" checked> Cine <br>");
+                            if(request.getParameter("Prefe3")!=null)
+                                out.println("<input type=\"checkbox\" name=\"Prefe3\" value=\"Cine\" checked> Cine <br>");
                             else   
-                                out.println("<input type=\"checkbox\" name=\"Cine\" value=\"Cine\"> Cine <br>");
+                                out.println("<input type=\"checkbox\" name=\"Prefe3\" value=\"Cine\"> Cine <br>");
+                            
+                            if(request.getParameter("Afi3")!=null)
+                                out.println("<input type=\"checkbox\" name=\"Prefe4\" value=\"Juegos\" checked> Juegos <br>");
+                            else   
+                                out.println("<input type=\"checkbox\" name=\"Prefe4\" value=\"Juegos\"> Juegos <br>");
                             
                         out.println("</div>");
                         out.println("</br>");
 
                     out.println("</fieldset>");
                         out.println("<div id=\"botones\">");
-                            out.println("<input type=\"submit\" value=\"Enviar\"/>");
-                            out.println("<input type=\"submit\" value=\"Borrar\" formaction=\"HTML/formularioTrabajo.html\"/> ");              
+                            out.println("<input type=\"submit\" name=\"Enviar\" value=\"Enviar\"/>");
+                            out.println("<input type=\"submit\" value=\"Borrar\" value=\"Borrar\" formaction=\"HTML/formularioTrabajo.html\"/> ");              
                             out.println("</div>");
-                        out.println("</form>");                                
+                        out.println("</form>");   
             }
 
             out.println("</body>");
             out.println("</html>");
+            }
         }
     }
 
@@ -327,7 +309,7 @@ public class FormularioTrabajo extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**

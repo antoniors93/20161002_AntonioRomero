@@ -47,11 +47,11 @@ public class Formulario1 extends HttpServlet {
             while(parametros.hasMoreElements()){
                 String elemento=parametros.nextElement();
                 String valor=request.getParameter(elemento);
-                if(elemento.equalsIgnoreCase("enviar")){
-                out.println(elemento+": "+valor);
+                if(!elemento.equalsIgnoreCase("Enviar")){
+                out.println(elemento+": "+valor+"</br>");
                 }
             }
-            if(request.getParameter("marca")==null){
+            if(request.getParameter("Marca")==null){
                 out.println("Marca: OF");
             }
             out.println("</br> <a href='index.html' > Enlace a index </a>");
