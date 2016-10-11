@@ -9,12 +9,30 @@ and open the template in the editor.
 */
 
 #cabecera{
+    width:100%;
     text-align: center;
 }
 
+#contenedor{
+    width:80%;
+    margin-left:10%;
+}
+
 #tema1{
+    width:33%;
     float:left;
 }
-#titulo1{
-    text-align: center;
+
+#tema2{
+    width:33%;
+    float:left;  
+}
+
+#tema3{
+    width:33%;
+    float:left;
+}
+
+#titulo{
+    text-align:center;
 }

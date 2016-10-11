@@ -44,7 +44,7 @@ public class CabecerasPeticion extends HttpServlet {
               while(parametros2.hasMoreElements()){
                 String elemento=parametros2.nextElement();
                 String valor=request.getHeader(elemento);
-                out.println(elemento+" - "+valor);
+                out.println(elemento+"-"+valor+"</br>");
             }
               
             out.println("</br> <a href='index.html' > Enlace a index </a>");

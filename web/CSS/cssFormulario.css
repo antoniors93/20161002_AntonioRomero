@@ -13,6 +13,11 @@ and open the template in the editor.
     margin:20px;
 }
 
+#calculadora{
+    background-color:#F8FFCC;
+    width:70%;
+    float:left;
+}
 #datosPers{
     background-color:#F8FFCC;
     width:70%;
