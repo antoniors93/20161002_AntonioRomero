@@ -46,7 +46,7 @@ public class FormularioOculto extends HttpServlet {
             out.println("<title>Servlet FormularioOculto</title>");           
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Formulario oculto</h1>");
+            out.println("<h2>Formulario</h2>");
             out.println("<form method=\"post\" action=\"FormularioOculto\">");
         while(parametros.hasMoreElements()){
             String nombre=parametros.nextElement();
@@ -91,7 +91,7 @@ public class FormularioOculto extends HttpServlet {
             
             //si aceptar se ha pulsado en la ventana que nos muestra los datos introducidos se hace lo siguiente
             if(request.getParameter("Aceptar")!=null){
-                out.println("<h2>Datos introducidos correctamente</h2>");
+                out.println("<h2>Datos guardados</h2>");
                 out.println("</br> <a href='index.html' > Enlace a index </a>");
             }else{
             if(request.getParameter("Enviar")!=null){ //si enviar se ha pulsado en el formulario llamamos al metodo que muestra los datos
@@ -141,7 +141,7 @@ public class FormularioOculto extends HttpServlet {
                     out.println("</div> <br/>");
                     
                     out.println("<div id=\"aficiones\">");
-                        out.println("<label>Aficiones(uno o varios,CTRL)</label> </br>");
+                        out.println("<label>Aficiones:</label> </br>");
                         //en cada check se comprueba si estaba marcado y limpiar ha sido pulsado
                            if(request.getParameter("Afi1")!=null&&request.getParameter("Limpiar")==null)
                                 out.println("<input type=\"checkbox\" name=\"Afi1\" value=\"Deporte\" checked> Deporte <br>");
