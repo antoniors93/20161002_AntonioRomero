@@ -19,7 +19,7 @@
     <body>
         <form method="post" action="Calculadora.jsp">
             <%!
-                private boolean esNumerico(String str) {
+                private boolean esNumerico(String str) {//metodo para comprobar que una cadena sea un numero
                     try {
                         Integer.parseInt(str);
                         return true;
@@ -29,44 +29,51 @@
                 }
             %>
             <%
-                if (request.getParameter("Calcular") != null) {
+                if (request.getParameter("Calcular") != null) {// si calcular esta pulsado
 
-                    Enumeration<String> parametros = request.getHeaderNames();
+                    Enumeration<String> parametros = request.getHeaderNames();//recogemos y mostramos las cabeceras
                     while (parametros.hasMoreElements()) {
                         String elemento = parametros.nextElement();
                         String valor = request.getHeader(elemento);
                         if (elemento.equalsIgnoreCase("user-agent")) {
-                            out.println(elemento + "-" + valor + "</br>");
+            %><p><%=elemento%> - <%=valor%></p><%
                         }
                     }
+                    //mostramos la hora con un formato determinado
                     Date ahora = new Date();
                     SimpleDateFormat formatear = new SimpleDateFormat("EEEE d MMMM yyyy HH:mm:ss");
-                    out.println(formatear.format(ahora));
+                    %><p><%=formatear.format(ahora)%></p><%
+                        //si los dos operandos son numericos
                     if (esNumerico(request.getParameter("ope1")) && esNumerico(request.getParameter("ope2"))) {
                         int ope1 = Integer.parseInt(request.getParameter("ope1"));
                         int ope2 = Integer.parseInt(request.getParameter("ope2"));
-
+                        int resultado=0;
+                        //realizamos la operacion seleccionada y devolvemos el resultado
                         switch (Integer.parseInt(request.getParameter("Operacion"))) {
                             case 1:
-                                out.print("<h3>Resultado: " + (ope1 + ope2) + "</h3>");
+                                resultado=ope1+ope2;
+                               %><h3>Resultado: <%=resultado%></h3><%
                                 break;
                             case 2:
-                                out.print("<h3>Resultado: " + (ope1 - ope2) + "</h3>");
+                                resultado=ope1-ope2;
+                                %><h3>Resultado: <%=resultado%></h3><%
                                 break;
                             case 3:
-                                out.print("<h3>Resultado: " + (ope1 * ope2) + "</h3>");
+                                resultado=ope1*ope2;
+                                %><h3>Resultado: <%=resultado%></h3><%
                                 break;
                             case 4:
                                 if (ope2 == 0) {
-                                    out.print("<h3>No se puede dividir por 0</h3>");
+                                   %><h3>No se puede dividir por 0</h3><%
                                 } else {
-                                    out.print("<h3>Resultado: " + (ope1 / ope2) + "</h3>");
+                                    resultado=ope1/ope2;
+                                    %><h3>Resultado: <%=resultado%></h3><%
                                 }
                                 break;
                         }
 
                     } else {
-                        out.print("<h3>Los operandos no tienen un valor correcto</h3>");
+                       %><h3>Los operandos no tienen un valor correcto</h3><%
                     }
 
                 }

@@ -9,12 +9,13 @@ package es.albarregas.beans;
  *
  * @author Antonio
  */
-public class Objeto {
+public class Usuario {
     
     private int id;
     private String nombre;
-    private int edad;
-
+    private float sueldo;
+    
+    
     public int getId() {
         return id;
     }
@@ -31,13 +32,14 @@ public class Objeto {
         this.nombre = nombre;
     }
 
-    public int getEdad() {
-        return edad;
+    public float getSueldo() {
+        return sueldo;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public void setSueldo(float sueldo) {
+        this.sueldo = sueldo;
     }
+
     
     
 }

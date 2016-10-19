@@ -37,7 +37,7 @@ public class ContadorVisitasSesiones extends HttpServlet {
 
         Integer contador = 0;
         HttpSession sesion = request.getSession(true);
-        
+
         if (request.getParameter("Invalidar") != null) {
             sesion.invalidate();
             sesion = request.getSession(true);
@@ -51,8 +51,6 @@ public class ContadorVisitasSesiones extends HttpServlet {
             contador++;
             sesion.setAttribute("CONTADOR", contador);
         }
-
-
 
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */

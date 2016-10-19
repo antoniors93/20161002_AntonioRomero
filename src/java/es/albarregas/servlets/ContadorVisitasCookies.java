@@ -46,9 +46,9 @@ public class ContadorVisitasCookies extends HttpServlet {
 
         Cookie cookie = null;
         Cookie[] cookies = request.getCookies();
-
+        //si el vector de cookies es distinto de null cuando encuentre la cookie contador la almacenamos en una vriable local
         if (cookies != null) {
-            for (int i = 0; i <= cookies.length; i++) {
+            for (int i = 0; i < cookies.length; i++) {
                 if (cookies[i].getName().equals("CONTADOR")) {
                     cookie = cookies[i];
                     break;
@@ -56,11 +56,12 @@ public class ContadorVisitasCookies extends HttpServlet {
             }
         }
 
-        if (cookie == null) {
+        if (cookie == null) { //si la cookie es nula la creamos y lse asignamos el contados
             cookie = new Cookie("CONTADOR", "0");
         } else if (request.getParameter("Borrar") != null) {
             cookie.setValue("0");
         }
+        //aumentamos el contador de la cookie
         int contador = Integer.parseInt(cookie.getValue());
         contador = contador + 1;
         cookie.setValue(String.valueOf(contador));
